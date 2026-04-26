@@ -1,0 +1,28 @@
+{% doc %}
+  Renders a button element.
+
+  @param {string} label - The text displayed inside the button.
+  @param {string} [variant] - Visual style variant. One of: primary, secondary, danger.
+  @param {string} [color] - Background color. Accepts any valid CSS color value.
+  @param {boolean} [disabled] - When true, the button is non-interactive and visually dimmed.
+
+  @example
+  {% render 'button', label: 'Add to cart', variant: 'primary', color: '#2563EB' %}
+{% enddoc %}
+
+<button
+  class="button button--{{ variant }}"
+  style="
+    background-color: {{ color }};
+    color: white;
+    padding: 0.33rem 0.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: {% if disabled %}0.5{% else %}1{% endif %};
+  "
+  {% if disabled %}disabled{% endif %}
+>
+  {{ label }} - {{ 2000 | money }}
+</button>

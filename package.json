@@ -1,0 +1,11 @@
+{
+  "name": "storybook-shopify-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build": "pnpm --filter './packages/**' build",
+    "dev": "pnpm --filter './packages/**' dev",
+    "storybook": "pnpm --filter example-basic storybook",
+    "build-storybook": "pnpm --filter example-basic build-storybook"
+  }
+}
