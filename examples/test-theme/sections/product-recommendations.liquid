@@ -1,0 +1,77 @@
+{% comment %}
+  https://shopify.dev/docs/storefronts/themes/product-merchandising/recommendations/complementary-products
+{% endcomment %}
+
+{%- assign unique_id = 'product_recommendations-' | append: section.id | append: product.id -%}
+
+{%- assign amount = section.settings.limit | times: 1 | default: 4 -%}
+
+<div class="my-4 px-4">
+  <h2 class="mb-4">You may also like</h2>
+
+  <div id="{{ unique_id }}" class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    {%- if recommendations.performed -%}
+      {%- for product in recommendations.products -%}
+        <li>
+          {% render 'product-card', product: product %}
+        </li>
+      {%- endfor -%}
+    {%- else -%}
+      {% for i in (1..amount) %}
+        {% render 'product-card-skeleton' %}
+      {% endfor %}
+    {%- endif -%}
+  </div>
+
+  <form
+    action="{{ routes.product_recommendations_url }}"
+    hx-get="{{ routes.product_recommendations_url }}"
+    hx-trigger="load"
+    hx-select="#{{ unique_id }}"
+    hx-target="#{{ unique_id }}"
+    hx-swap="outerHTML"
+    data-loading-states
+  >
+    <input type="hidden" name="section_id" value="{{ section.id }}">
+    <input type="hidden" name="product_id" value="{{ product.id }}">
+    <input type="hidden" name="limit" value="{{ amount }}">
+    <input type="hidden" name="intent" value="{{ section.settings.intent | default: 'related' }}">
+  </form>
+</div>
+
+{% schema %}
+{
+  "name": "Product recommendations",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "intent",
+      "label": "Intent",
+      "options": [
+        { "label": "Related", "value": "related" },
+        { "label": "Complementary", "value": "complementary" }
+      ],
+      "default": "related",
+      "info": "What type of products"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Limit",
+      "default": 4,
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "info": "How many products"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product recommendations"
+    }
+  ]
+}
+{% endschema %}

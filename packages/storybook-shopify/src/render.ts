@@ -5,8 +5,24 @@ import type { ShopifyRenderer } from './types.js';
 
 // Shopify-only block tags that must be stripped before LiquidJS parses a template.
 // Applied both to top-level templates and to snippets loaded via {% render %}.
+
+// Strip entirely — content is irrelevant in preview
 const STRIP_BLOCKS_RE =
-  /\{%-?\s*(?:doc|schema)\s*-?%\}[\s\S]*?\{%-?\s*end(?:doc|schema)\s*-?%\}/g;
+  /\{%-?\s*(?:doc|schema|javascript)\s*-?%\}[\s\S]*?\{%-?\s*end(?:doc|schema|javascript)\s*-?%\}/g;
+
+// Block tags whose inner content should be preserved but the wrapper replaced
+const STYLESHEET_BLOCK_RE =
+  /\{%-?\s*stylesheet\s*-?%\}([\s\S]*?)\{%-?\s*endstylesheet\s*-?%\}/g;
+const STYLE_BLOCK_RE =
+  /\{%-?\s*style\s*-?%\}([\s\S]*?)\{%-?\s*endstyle\s*-?%\}/g;
+
+// {% paginate … %} … {% endpaginate %} → keep inner content only
+const PAGINATE_BLOCK_RE =
+  /\{%-?\s*paginate\b[^%]*?-?%\}([\s\S]*?)\{%-?\s*endpaginate\s*-?%\}/g;
+
+// Single-line Shopify-only tags that have no meaningful equivalent in preview
+const STRIP_SINGLE_TAGS_RE =
+  /\{%-?\s*(?:layout|sections?|content_for)\b[^%]*?-?%\}/g;
 
 // Snippets are registered at preview startup by entry-preview.ts via registerSnippets().
 // The map is mutated in place so the engine's FS closure always sees the current state.
@@ -35,15 +51,54 @@ const engine = new Liquid({
     },
     readFileSync(file: string) {
       const name = file.replace(/\.liquid$/, '').replace(/^\.?\//, '');
-      return (snippets[name] ?? '').replace(STRIP_BLOCKS_RE, '');
+      return stripShopifyOnlyBlocks(snippets[name] ?? '');
     },
     async exists() {
       return true;
     },
     async readFile(file: string) {
       const name = file.replace(/\.liquid$/, '').replace(/^\.?\//, '');
-      return (snippets[name] ?? '').replace(STRIP_BLOCKS_RE, '');
+      return stripShopifyOnlyBlocks(snippets[name] ?? '');
     },
+  },
+});
+
+// --- Shopify custom tags ---
+
+// {% form 'type', object, key: value, … %} → <form key="value" …>…</form>
+// Keyword args (key: value) are evaluated and rendered as HTML attributes.
+// Positional args are ignored (they carry Shopify server-side context).
+engine.registerTag('form', {
+  parse(token: { args?: string }, remainTokens: unknown[]) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const self = this as any;
+    self.templates = [];
+    self.attrs = parseFormHtmlAttrs(token.args ?? '');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stream = (self.liquid.parser as any).parseStream(remainTokens);
+    stream
+      .on('tag:endform', () => stream.stop())
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .on('template', (tpl: any) => self.templates.push(tpl))
+      .on('end', () => { /* unterminated form — ignore */ });
+    stream.start();
+  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  *render(ctx: any, emitter: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const self = this as any;
+    const parts: string[] = [];
+    for (const { key, rawValue } of self.attrs as Array<{ key: string; rawValue: string }>) {
+      try {
+        const val = self.liquid.evalValueSync(rawValue, ctx);
+        if (val == null) continue;
+        const str = String(val);
+        parts.push(str === '' ? key : `${key}="${str.replace(/"/g, '&quot;')}"`);
+      } catch { /* skip unresolvable expressions */ }
+    }
+    emitter.write(`<form${parts.length ? ' ' + parts.join(' ') : ''}>`);
+    yield self.liquid.renderer.renderTemplates(self.templates, ctx, emitter);
+    emitter.write('</form>');
   },
 });
 
@@ -126,7 +181,47 @@ engine.registerFilter('placeholder_svg_tag', (type: string, css = '') =>
 );
 
 function stripShopifyOnlyBlocks(template: string): string {
-  return template.replace(STRIP_BLOCKS_RE, '');
+  return template
+    .replace(STRIP_BLOCKS_RE, '')
+    .replace(STYLESHEET_BLOCK_RE, '<style>$1</style>')
+    .replace(STYLE_BLOCK_RE, '<style>$1</style>')
+    .replace(PAGINATE_BLOCK_RE, '$1')
+    .replace(STRIP_SINGLE_TAGS_RE, '');
+}
+
+// Split a Liquid tag args string by top-level commas (not inside quotes)
+function splitLiquidArgs(args: string): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let inSingle = false;
+  let inDouble = false;
+  let current = '';
+  for (let i = 0; i < args.length; i++) {
+    const ch = args[i];
+    if (ch === "'" && !inDouble) { inSingle = !inSingle; current += ch; continue; }
+    if (ch === '"' && !inSingle) { inDouble = !inDouble; current += ch; continue; }
+    if (!inSingle && !inDouble) {
+      if (ch === '{' || ch === '[' || ch === '(') { depth++; current += ch; continue; }
+      if (ch === '}' || ch === ']' || ch === ')') { depth--; current += ch; continue; }
+      if (ch === ',' && depth === 0) { parts.push(current.trim()); current = ''; continue; }
+    }
+    current += ch;
+  }
+  if (current.trim()) parts.push(current.trim());
+  return parts;
+}
+
+// Extract HTML-attribute key:value pairs from a Liquid form tag args string.
+// Positional args (e.g. 'product', product) are skipped; only `key: value`
+// pairs where the key matches a valid HTML attribute pattern are returned.
+function parseFormHtmlAttrs(args: string): Array<{ key: string; rawValue: string }> {
+  const result: Array<{ key: string; rawValue: string }> = [];
+  for (const part of splitLiquidArgs(args)) {
+    const m = part.match(/^([\w-]+)\s*:\s*(.+)$/s);
+    if (!m) continue;
+    result.push({ key: m[1], rawValue: m[2].trim() });
+  }
+  return result;
 }
 
 // Public helper: render a Liquid template string against an arbitrary context.

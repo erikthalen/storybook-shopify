@@ -1,0 +1,46 @@
+{% doc %}
+  Outputs a slide-down notification `<dialog>` that appears in the top-right corner when a product is added to the cart.
+  The dialog content is loaded from the `cart-notification-content` section via AJAX.
+  Closing it (e.g. clicking outside) is handled by `closedby="any"`.
+  The open/close logic is defined as an [Alpine.js](https://alpinejs.dev/) component in `cart-notification.ts`.
+
+  @example
+  {% render 'cart-notification' %}
+{% enddoc %}
+
+<dialog
+  id="cart_notification"
+  x-data="cartNotification"
+  class="fixed top-14 right-4 bottom-auto left-auto z-11 w-full max-w-[calc(100vw-2rem)] md:max-w-md"
+  closedby="any"
+  style="view-transition-name: cart-notification"
+></dialog>
+
+{% comment %} backdrop {% endcomment %}
+<div
+  class="fixed top-0 left-0 z-8 h-screen w-screen bg-black/25 backdrop-blur-[2px]"
+  style="view-transition-name: cart-notification-backdrop"
+></div>
+
+{% stylesheet %}
+  dialog#cart_notification + div {
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+    display: none;
+    opacity: 0;
+    transition:
+      opacity 500ms var(--ease-in-out),
+      display 500ms var(--ease-in-out) allow-discrete;
+  }
+
+  dialog#cart_notification[open] + div {
+    display: block;
+    opacity: 1;
+  }
+
+  @starting-style {
+    dialog#cart_notification[open] + div {
+      opacity: 0;
+    }
+  }
+{% endstylesheet %}

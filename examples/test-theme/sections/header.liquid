@@ -1,0 +1,88 @@
+<div
+  class="relative z-2 flex h-10 w-full items-center justify-between gap-3 border-b border-(--jazz-neutral-300) bg-(--jazz-background-color) px-4 md:gap-4"
+  style="view-transition-name: site-header"
+>
+  <nav class="flex items-center gap-3 md:gap-4">
+    <a
+      href="{{ routes.root_url }}"
+      x-data="{ active: {% if request.path == '{{ routes.root_url }}' %}true{% else %}false{% endif %} }"
+      @window:navigation.window="active = $el.href.replace(location.origin, '') === location.pathname"
+      :class="active ? 'underline' : ''"
+      class="button ghost"
+    >
+      {% if shop.brand.logo != blank %}
+        {% render 'image', image: shop.brand.logo, class: 'h-6 w-auto', alt: 'The logo' %}
+      {% else %}
+        Home
+      {% endif %}
+    </a>
+
+    <a
+      href="{{ routes.collections_url }}"
+      x-data="{ active: {% if request.path contains '{{ routes.collections_url }}' %}true{% else %}false{% endif %} }"
+      @window:navigation.window="active = location.pathname.includes($el.href.replace(location.origin, ''))"
+      :class="active ? 'underline' : ''"
+      class="desktop-only button ghost"
+    >
+      Shop
+    </a>
+  </nav>
+
+  <div class="mobile-only">
+    {% content_for 'block', type: '_mobile-menu', id: 'mobile_menu' %}
+  </div>
+
+  <nav class="ml-auto flex items-center gap-3 md:gap-4">
+    {% content_for 'blocks' %}
+  </nav>
+</div>
+
+{% stylesheet %}
+  :root {
+    --header-height: 2.5rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Header",
+  "tag": "header",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "limit": 1,
+  "blocks": [
+    {
+      "type": "_localization-form"
+    },
+    {
+      "type": "_cart-drawer"
+    },
+    {
+      "type": "_predictive-search"
+    },
+    {
+      "type": "_account-link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header",
+      "blocks": [
+        {
+          "type": "_localization-form"
+        },
+        {
+          "type": "_predictive-search"
+        },
+        {
+          "type": "_account-link"
+        },
+        {
+          "type": "_cart-drawer"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

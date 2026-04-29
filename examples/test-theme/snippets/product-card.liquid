@@ -1,0 +1,32 @@
+{% doc %}
+  Outputs a product card with image, title, price, and a quick-buy button.
+  Renders the `product-price` and `quick-buy` snippets internally.
+
+  @param {object} product - Shopify `product` object.
+
+  @example
+  {% render 'product-card', product: product %}
+{% enddoc %}
+
+<div
+  class="relative flex flex-col items-start gap-3"
+  style="view-transition-name: product-card-{{ product.selected_or_first_available_variant.id }}"
+>
+  {% if product.selected_or_first_available_variant.featured_image != blank %}
+    {% render 'image',
+      image: product.selected_or_first_available_variant.featured_image,
+      sizes: '50vw, 20vw',
+      class: 'rounded'
+    %}
+  {% else %}
+    {% render 'image', image: product.featured_image, sizes: '50vw, 20vw', class: 'rounded' %}
+  {% endif %}
+
+  <a href="{{ product.url }}" class="after:absolute after:inset-0">
+    {{ product.title }}
+  </a>
+
+  {% render 'product-price', product: product %}
+
+  {% render 'quick-buy', product: product %}
+</div>

@@ -13,6 +13,14 @@ export type FrameworkOptions = {
     builder?: BuilderOptions;
     /** Parse {% doc %} blocks and generate argTypes automatically. */
     renderDocTags?: boolean;
+    /** Entry files (relative to src/) to load in the preview iframe from the built assets. */
+    viteEntries?: string[];
+    /**
+     * When true, auto-generates a basic story for every .liquid file found in
+     * sections/, snippets/, and blocks/ (files prefixed with _ are skipped).
+     * Generated stories are written to .storybook/.auto/ — add that folder to .gitignore.
+     */
+    generateAutomaticStories?: boolean;
 };
 type StorybookConfigFramework = {
     framework: FrameworkName | {

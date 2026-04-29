@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "default": {
+      "type": "search",
+      "settings": {}
+    }
+  },
+  "order": ["default"]
+}

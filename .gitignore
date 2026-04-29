@@ -1,2 +1,4 @@
 node_modules
 .DS_Store
+# Auto-generated stories from storybook-shopify's generateAutomaticStories option
+**/.storybook/.auto/

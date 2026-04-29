@@ -1,0 +1,44 @@
+{% doc %}
+  Outputs a minimal add-to-cart button for the selected or first available variant.
+  Quantity is fixed at 1. Shows "Sold out" and disables the button when the variant is unavailable.
+  Includes a spinner icon that appears while the cart request is pending.
+
+  @param {object} product - Shopify `product` object.
+
+  @example
+  {% render 'quick-buy', product: product %}
+{% enddoc %}
+
+{% assign variant = product.selected_or_first_available_variant %}
+
+{% capture aria_label %}Add {{ product.title }} - {{ variant.options | join: ' / ' }} to cart{% endcapture %}
+
+{% form 'product',
+  product,
+  hx-post: routes.cart_add_url,
+  hx-select: '#cart_drawer_content',
+  hx-target: '#cart_drawer_content',
+  hx-swap: 'outerHTML',
+  hx-select-oob: '#cart_amount',
+  aria-label: aria_label,
+  data-loading-states: ''
+%}
+  <input type="hidden" name="quantity" value="1">
+  <input type="hidden" name="id" value="{{ variant.id }}">
+
+  <button
+    data-loading-aria-busy
+    class="button outlined"
+    type="submit"
+    name="add"
+    {%- unless variant.available -%}
+      disabled
+    {%- endunless -%}
+  >
+    {%- if variant.available -%}
+      Add to cart
+    {%- else -%}
+      Sold out
+    {%- endif -%}
+  </button>
+{% endform %}

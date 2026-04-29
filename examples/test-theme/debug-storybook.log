@@ -1,0 +1,23 @@
+[16:33:46.972] [INFO] storybook v10.3.5
+[16:33:47.378] [DEBUG] Getting package.json info for /Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/examples/test-theme/package.json...
+[16:33:47.522] [INFO] Starting...
+[16:33:47.656] [DEBUG] Starting preview..
+[16:33:48.816] [WARN] 🚨 Unable to index files:
+- ./.storybook/.auto/sections--test-section.stories.js,./stories/TestSection.stories.js: Duplicate stories with id: sections-test-section--default
+- ./.storybook/.auto/sections--welcome.stories.js,./stories/Welcome.stories.js: Duplicate stories with id: sections-welcome--default
+[16:33:48.818] [ERROR] Failed to build the preview
+[16:33:48.822] [ERROR] Error: [38;2;241;97;97mUnable to index files:
+- ./.storybook/.auto/sections--test-section.stories.js,./stories/TestSection.stories.js: Duplicate stories with id: sections-test-section--default
+- ./.storybook/.auto/sections--welcome.stories.js,./stories/Welcome.stories.js: Duplicate stories with id: sections-welcome--default[39m
+    at _StoryIndexGenerator.getIndexAndStats (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/storybook@10.3.5_@testing-library+dom@10.4.1_prettier@3.8.3_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/storybook/dist/core-server/index.js:6292:15)
+    at async _StoryIndexGenerator.getIndex (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/storybook@10.3.5_@testing-library+dom@10.4.1_prettier@3.8.3_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/storybook/dist/core-server/index.js:6271:13)
+    at async BasicMinimalPluginContext.config (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/@storybook+builder-vite@10.3.5_storybook@10.3.5_@testing-library+dom@10.4.1_prettier@3._1b919034648327df91e8cc8bfe1ca7a3/node_modules/@storybook/builder-vite/dist/_node-chunks/chunk-FQ4EAKAD.js:184:19)
+    at async runConfigHook (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/vite@8.0.10_@types+node@25.6.0_jiti@2.6.1/node_modules/vite/dist/node/chunks/node.js:34798:15)
+    at async resolveConfig (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/vite@8.0.10_@types+node@25.6.0_jiti@2.6.1/node_modules/vite/dist/node/chunks/node.js:34248:11)
+    at async _createServer (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/vite@8.0.10_@types+node@25.6.0_jiti@2.6.1/node_modules/vite/dist/node/chunks/node.js:26029:65)
+    at async Module.start (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/@storybook+builder-vite@10.3.5_storybook@10.3.5_@testing-library+dom@10.4.1_prettier@3._1b919034648327df91e8cc8bfe1ca7a3/node_modules/@storybook/builder-vite/dist/index.js:1557:17)
+    at async storybookDevServer (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/storybook@10.3.5_@testing-library+dom@10.4.1_prettier@3.8.3_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/storybook/dist/core-server/index.js:7503:83)
+    at async buildOrThrow (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/storybook@10.3.5_@testing-library+dom@10.4.1_prettier@3.8.3_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/storybook/dist/core-server/index.js:4508:12)
+    at async buildDevStandalone (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/storybook@10.3.5_@testing-library+dom@10.4.1_prettier@3.8.3_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/storybook/dist/core-server/index.js:8033:41)
+[16:33:48.829] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.

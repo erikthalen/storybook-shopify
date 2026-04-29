@@ -1,0 +1,49 @@
+{% doc %}
+  Outputs a `<video>` tag that autoplays, loops, and is muted by default.
+  The aspect ratio is applied via CSS custom properties and can differ between screen sizes.
+
+  @param {object} video - Shopify `video` object.
+  @param {string} [aspect_ratio] - CSS `aspect-ratio` value, e.g. `16/9`.
+  @param {string} [aspect_ratio_sm] - Aspect ratio on small screens. Overrides `aspect_ratio`.
+  @param {string} [aspect_ratio_md] - Aspect ratio on large screens. Overrides `aspect_ratio`.
+
+  @example
+  {% render 'video', video: section.settings.video, aspect_ratio: '16/9' %}
+
+  {% render 'video',
+    video: section.settings.video,
+    aspect_ratio_sm: '1/1',
+    aspect_ratio_md: '16/9'
+  %}
+{% enddoc %}
+
+{% if video %}
+  <div
+    class="video"
+    style="--aspect-ratio-sm: {{ aspect_ratio_sm | default: aspect_ratio }}; --aspect-ratio-md: {{ aspect_ratio_md | default: aspect_ratio }}"
+  >
+    {{ video | video_tag: image_size: '1200x', autoplay: true, loop: true, muted: true }}
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    aspect-ratio: var(--aspect-ratio-sm);
+  }
+
+  @media (width >= 48rem) {
+    .video video {
+      aspect-ratio: var(--aspect-ratio-md);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .video video {
+      animation-play-state: paused;
+    }
+  }
+{% endstylesheet %}

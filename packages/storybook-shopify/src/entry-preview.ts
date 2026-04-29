@@ -1,10 +1,10 @@
-import type { ArgTypesEnhancer, InputType, StrictInputType } from 'storybook/internal/types';
+import type { ArgsEnhancer, ArgTypesEnhancer, InputType, StrictInputType } from 'storybook/internal/types';
 
 import { shopifyOptions } from 'virtual:storybook-shopify-options';
 import { snippets } from 'virtual:storybook-shopify-snippets';
 
 import { parseDocArgTypes } from './doc-parser.js';
-import { parseSchemaArgTypes } from './schema-parser.js';
+import { parseSchemaArgTypes, parseSchemaDefaults } from './schema-parser.js';
 import { registerSnippets, render, renderToCanvas } from './render.js';
 import type { ShopifyRenderer } from './types.js';
 
@@ -14,6 +14,18 @@ registerSnippets(snippets);
 export { render, renderToCanvas };
 
 export const parameters = { renderer: 'shopify' };
+
+// Storybook's normalizeInputTypes runs on explicitly-defined argTypes but not on
+// enhancer output. Mirror its normalizeControl logic so the Controls panel sees
+// the expected { type, disable } shape rather than raw string shorthands.
+function normalizeControl(ctrl: unknown): unknown {
+  if (ctrl === false) return { disable: true };
+  if (typeof ctrl === 'string') return { type: ctrl, disable: false };
+  if (ctrl && typeof ctrl === 'object' && 'type' in ctrl && !('disable' in ctrl)) {
+    return { ...(ctrl as object), disable: false };
+  }
+  return ctrl;
+}
 
 // Builds an enhancer from any parser that maps a template string → InputType map.
 // Explicit story argTypes always win; parsed types fill in the rest.
@@ -31,7 +43,14 @@ function makeArgTypesEnhancer(
     const allKeys = new Set([...Object.keys(parsed), ...Object.keys(argTypes)]);
 
     for (const key of allKeys) {
-      merged[key] = { ...parsed[key], ...argTypes[key], name: key } as StrictInputType;
+      const entry = {
+        ...parsed[key],
+        ...argTypes[key],
+        name: key,
+      } as StrictInputType;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (entry.control !== undefined) (entry as any).control = normalizeControl(entry.control);
+      merged[key] = entry;
     }
 
     return merged;
@@ -44,5 +63,22 @@ export const argTypesEnhancers: ArgTypesEnhancer<ShopifyRenderer>[] = shopifyOpt
   ? [
       makeArgTypesEnhancer(parseSchemaArgTypes),
       makeArgTypesEnhancer(parseDocArgTypes),
+    ]
+  : [];
+
+// Populate args with schema default values so controls start with meaningful
+// data. Only fills keys not already set by the story's own args.
+export const argsEnhancers: ArgsEnhancer<ShopifyRenderer>[] = shopifyOptions.renderDocTags
+  ? [
+      (context) => {
+        const { component, initialArgs } = context;
+        if (typeof component !== 'string') return {};
+        const defaults = parseSchemaDefaults(component);
+        const result: Record<string, unknown> = {};
+        for (const [key, value] of Object.entries(defaults)) {
+          if (!(key in initialArgs)) result[key] = value;
+        }
+        return result;
+      },
     ]
   : [];

@@ -1,0 +1,136 @@
+{
+  "src/alpine.ts": {
+    "file": "alpine-CifUfrKP.js",
+    "name": "alpine",
+    "src": "src/alpine.ts",
+    "isEntry": true,
+    "imports": [
+      "src/components/cart-notification.ts",
+      "src/components/product-images-carousel.ts"
+    ]
+  },
+  "src/alpinejs.d.ts": {
+    "file": "alpinejs.d-AkMz9tuj.js",
+    "name": "alpinejs.d",
+    "src": "src/alpinejs.d.ts",
+    "isEntry": true
+  },
+  "src/components/cart-notification.ts": {
+    "file": "cart-notification-DjKPf7jL.js",
+    "name": "cart-notification",
+    "src": "src/components/cart-notification.ts",
+    "isEntry": true,
+    "imports": [
+      "src/utils/define.ts"
+    ]
+  },
+  "src/components/product-images-carousel.ts": {
+    "file": "product-images-carousel-CjylFfZd.js",
+    "name": "product-images-carousel",
+    "src": "src/components/product-images-carousel.ts",
+    "isEntry": true,
+    "imports": [
+      "src/utils/define.ts"
+    ]
+  },
+  "src/fonts/DMMono-Light.ttf": {
+    "file": "DMMono-Light-BFIVI6Ma.ttf",
+    "src": "src/fonts/DMMono-Light.ttf"
+  },
+  "src/fonts/DMMono-Regular.ttf": {
+    "file": "DMMono-Regular-DjQuYRb_.ttf",
+    "src": "src/fonts/DMMono-Regular.ttf"
+  },
+  "src/global.d.ts": {
+    "file": "global.d-CSBJLw-H.js",
+    "name": "global.d",
+    "src": "src/global.d.ts",
+    "isEntry": true
+  },
+  "src/jazz.css": {
+    "file": "jazz-2cv5ME6U.css",
+    "name": "jazz",
+    "names": [
+      "jazz.css"
+    ],
+    "src": "src/jazz.css",
+    "isEntry": true
+  },
+  "src/swup.ts": {
+    "file": "swup-CRhpAA-m.js",
+    "name": "swup",
+    "src": "src/swup.ts",
+    "isEntry": true
+  },
+  "src/theme.css": {
+    "file": "theme-_AWJXrf5.css",
+    "name": "theme",
+    "names": [
+      "theme.css"
+    ],
+    "src": "src/theme.css",
+    "isEntry": true,
+    "assets": [
+      "DMMono-Light-BFIVI6Ma.ttf",
+      "DMMono-Regular-DjQuYRb_.ttf"
+    ]
+  },
+  "src/theme.ts": {
+    "file": "theme-Cd1mKARE.js",
+    "name": "theme",
+    "src": "src/theme.ts",
+    "isEntry": true,
+    "imports": [
+      "src/alpine.ts",
+      "src/alpine.ts",
+      "src/swup.ts",
+      "src/swup.ts",
+      "src/utils/htmx-ext-loading-states.ts",
+      "src/utils/htmx-ext-loading-states.ts",
+      "src/utils/htmx-memory-cache.ts",
+      "src/utils/htmx-memory-cache.ts",
+      "src/utils/swup-preload-children.ts",
+      "src/utils/swup-preload-children.ts",
+      "src/utils/swup-update-cache.ts",
+      "src/utils/swup-update-cache.ts",
+      "src/utils/vvh.ts",
+      "src/utils/vvh.ts"
+    ]
+  },
+  "src/utils/define.ts": {
+    "file": "define-BlnoDbDI.js",
+    "name": "define",
+    "src": "src/utils/define.ts",
+    "isEntry": true
+  },
+  "src/utils/htmx-ext-loading-states.ts": {
+    "file": "htmx-ext-loading-states-DizcAg52.js",
+    "name": "htmx-ext-loading-states",
+    "src": "src/utils/htmx-ext-loading-states.ts",
+    "isEntry": true
+  },
+  "src/utils/htmx-memory-cache.ts": {
+    "file": "htmx-memory-cache-DX9ccSzv.js",
+    "name": "htmx-memory-cache",
+    "src": "src/utils/htmx-memory-cache.ts",
+    "isEntry": true
+  },
+  "src/utils/swup-preload-children.ts": {
+    "file": "swup-preload-children-DdZsFwLu.js",
+    "name": "swup-preload-children",
+    "src": "src/utils/swup-preload-children.ts",
+    "isEntry": true
+  },
+  "src/utils/swup-update-cache.ts": {
+    "file": "swup-update-cache-BeXHzTd4.js",
+    "name": "swup-update-cache",
+    "src": "src/utils/swup-update-cache.ts",
+    "isEntry": true
+  },
+  "src/utils/vvh.ts": {
+    "file": "vvh-CMTdJ-Gb.js",
+    "name": "vvh",
+    "src": "src/utils/vvh.ts",
+    "isEntry": true
+  }
+}

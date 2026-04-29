@@ -1,0 +1,47 @@
+<section id="main_product" class="grid gap-4 md:grid-cols-2">
+  <div class="col-span-2 grid items-start justify-items-center gap-4 md:grid-cols-2">
+    <div class="w-full">
+      {% render 'product-images-carousel' %}
+
+      {% comment %}
+        <div class="flex gap-4 pl-4 mt-4">
+          {% render 'variant-images' %}
+        </div>
+      {% endcomment %}
+    </div>
+
+    <div class="w-full p-5 max-md:px-4 md:w-sm lg:sticky lg:top-[20vh]">
+      <div id="product_info">
+        <h1 class="mb-1">{{ product.title }}</h1>
+
+        <div class="mb-4" id="product_price">
+          {% render 'product-price', product: product %}
+        </div>
+      </div>
+
+      {% render 'product-form', product: product %}
+
+      {%- unless product.description == '<p></p>' -%}
+        <details id="product_description" class="mt-4">
+          <summary class="cursor-pointer py-4">Description</summary>
+
+          <div>{{ product.description }}</div>
+        </details>
+      {%- endunless -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main product",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "presets": [
+    {
+      "name": "Main product"
+    }
+  ]
+}
+{% endschema %}

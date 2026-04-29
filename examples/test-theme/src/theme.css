@@ -1,0 +1,141 @@
+@layer theme, base, jazz-reset, jazz, components, utilities;
+
+/* https://erikthalen.github.io/jazz/ */
+/* maybe remove this when getting started */
+@import "./jazz.css";
+
+@import "tailwindcss";
+@source "../";
+
+@font-face {
+  font-family: "DMMono";
+  src: local("DMMono"), url("fonts/DMMono-Light.ttf");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "DMMono";
+  src: local("DMMono"), url("fonts/DMMono-Regular.ttf");
+  font-weight: 700;
+  font-display: block;
+}
+
+@theme {
+  --font-sans: "DMMono", sans-serif;
+  --background: var(--jazz-background-color);
+  --foreground: var(--jazz-text-color);
+}
+
+:root {
+  --jazz-primary: light-dark(#222222, #fefefe);
+}
+
+body {
+  background-color: var(--jazz-background-color);
+  color: var(--jazz-text-color);
+}
+
+button,
+.button {
+  border-radius: 4px;
+
+  &:not([class*="p-"]) {
+    padding: 0.33em;
+
+    &:not(.square) {
+      padding-inline: 0.5em;
+    }
+  }
+}
+
+svg:not([class*="size-"]) {
+  width: 1rem;
+  height: 1rem;
+}
+
+[aria-label] {
+  &:before {
+    border-radius: 3px;
+  }
+  &:after {
+    border-width: 3px;
+  }
+}
+
+* {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-weight: normal;
+}
+
+html {
+  /* apply zooming of everything on screens > 1440px */
+  --zoom-amount: 0.2;
+  font-size: max(
+    12px,
+    calc(12px + 12 * var(--zoom-amount) * (100vw - 1440px) / 1440)
+  );
+
+  scroll-padding-top: var(--header-height);
+
+  &[aria-busy="true"]:before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    z-index: 10000;
+  }
+}
+
+shopify-editor {
+  background-color: white;
+}
+
+body:has(dialog[scroll-lock][open], details[scroll-lock][open]) {
+  overflow: hidden;
+  touch-action: none;
+}
+
+dialog::backdrop {
+  view-transition-name: backdrop;
+}
+
+html:has([aria-busy="true"]) * {
+  cursor: wait !important;
+}
+
+details > summary {
+  list-style: none;
+}
+
+img:not([class*="h-"]):not([class*="size-"]) {
+  height: auto;
+}
+
+img:not([class*="w-"]):not([class*="size-"]) {
+  width: 100%;
+}
+
+.desktop-only {
+  @media (width < 48rem) {
+    display: none !important;
+  }
+}
+
+.mobile-only {
+  @media (width >= 48rem) {
+    display: none !important;
+  }
+}
+
+@keyframes prevent-scroll {
+  from {
+    opacity: 0;
+  }
+}
+
+input:focus {
+  animation: prevent-scroll 10ms forwards;
+}

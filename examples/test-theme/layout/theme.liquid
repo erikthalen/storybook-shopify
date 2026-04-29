@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="{{ shop.locale.iso_code }}" class="no-js">
+  <head>
+    {% render 'meta-tags' %}
+
+    {{ settings.custom_head }}
+
+    {% assign default_favicon = 'favicon.png' | asset_img_url %}
+    {% assign dark_favicon = settings.favicon_dark | image_url: width: 64, crop: false %}
+    {% assign light_favicon = settings.favicon_light | image_url: width: 64, crop: false %}
+
+    {% # theme-check-disable-next-line RemoteAsset %}
+    <link
+      rel="icon"
+      type="image/png"
+      media="(prefers-color-scheme: light)"
+      href="{{ dark_favicon | default: default_favicon }}"
+    >
+
+    {% # theme-check-disable-next-line RemoteAsset %}
+    <link
+      rel="icon"
+      type="image/png"
+      media="(prefers-color-scheme: dark)"
+      href="{{ light_favicon | default: default_favicon }}"
+    >
+
+    {%- liquid
+      render 'vite' with 'theme.css', preload_stylesheet: true
+      render 'vite' with 'theme.ts'
+    -%}
+
+    <script>
+      document.documentElement.classList.remove('no-js')
+    </script>
+
+    {{ content_for_header }}
+  </head>
+
+  <body hx-ext="morph, loading-states, preload" class="grid min-h-screen grid-rows-[auto_1fr] overflow-x-clip">
+    {% render 'skip-to-content-link' %}
+
+    <section
+      x-data="{ translated: false }"
+      @announcement-bar:visible.window="value => translated = !value.detail"
+      class="sticky top-0 z-10 w-screen transition-transform"
+      :class="translated ? '-translate-y-(--announcement-bar-height)' : ''"
+    >
+      {% sections 'header-group' %}
+    </section>
+
+    {% render 'cart-notification' %}
+
+    <main
+      id="swup"
+      role="main"
+      class="grid min-h-[calc(100vh-var(--header-height)-var(--announcement-bar-height))] grid-rows-[1fr_auto]"
+    >
+      <div id="content" class="contents">
+        <div>
+          {{ content_for_layout }}
+        </div>
+
+        {% sections 'footer-group' %}
+      </div>
+    </main>
+  </body>
+</html>

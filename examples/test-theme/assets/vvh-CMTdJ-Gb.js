@@ -1,0 +1,1 @@
+window.visualViewport?.addEventListener(`resize`,e),setTimeout(()=>{e()},100);function e(){document.body.style.setProperty(`--vvh`,window.visualViewport?.height+`px`)}
