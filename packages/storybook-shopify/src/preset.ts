@@ -6,6 +6,8 @@ import type { Options, PresetProperty } from 'storybook/internal/types';
 import type { FrameworkOptions } from './types.js';
 import type { InlineConfig } from 'vite';
 
+import { parseSchemaDefaults } from './schema-parser.js';
+
 // core: wires together the Vite builder and our renderer preset
 export const core: PresetProperty<'core'> = {
   builder: import.meta.resolve('@storybook/builder-vite'),
@@ -46,7 +48,7 @@ export const stories: PresetProperty<'stories'> = async (
       const storyFile = `${dir}--${file.replace(/\.liquid$/, '')}.stories.js`;
       const liquidRelPath = relative(autoDir, join(dirPath, file)).replace(/\\/g, '/');
       const content = readFileSync(join(dirPath, file), 'utf-8');
-      const defaults = extractSchemaDefaults(content);
+      const defaults = parseSchemaDefaults(content);
 
       writeFileSync(join(autoDir, storyFile), buildAutoStory(dir, file, liquidRelPath, defaults));
     }
@@ -95,20 +97,6 @@ function collectStoryTitles(root: string, autoDir: string): Set<string> {
   return titles;
 }
 
-function extractSchemaDefaults(content: string): Record<string, unknown> {
-  const m = content.match(/\{%-?\s*schema\s*-?%\}([\s\S]*?)\{%-?\s*endschema\s*-?%\}/);
-  if (!m) return {};
-  try {
-    const schema = JSON.parse(m[1].trim()) as { settings?: Array<{ id?: string; default?: unknown }> };
-    const defaults: Record<string, unknown> = {};
-    for (const s of schema.settings ?? []) {
-      if (s.id && s.default !== undefined) defaults[s.id] = s.default;
-    }
-    return defaults;
-  } catch {
-    return {};
-  }
-}
 
 function buildAutoStory(dir: string, filename: string, liquidRelPath: string, defaults: Record<string, unknown>): string {
   const title = buildAutoTitle(dir, filename);
@@ -228,14 +216,15 @@ function shopifySnippetsPlugin(root: string) {
 }
 
 function loadSnippets(root: string): Record<string, string> {
-  const snippetsDir = join(root, 'snippets');
-  if (!existsSync(snippetsDir)) return {};
-
   const result: Record<string, string> = {};
-  for (const file of readdirSync(snippetsDir)) {
-    if (!file.endsWith('.liquid')) continue;
-    const name = file.replace(/\.liquid$/, '');
-    result[name] = readFileSync(join(snippetsDir, file), 'utf-8');
+  for (const dir of ['snippets', 'blocks']) {
+    const dirPath = join(root, dir);
+    if (!existsSync(dirPath)) continue;
+    for (const file of readdirSync(dirPath)) {
+      if (!file.endsWith('.liquid')) continue;
+      const name = file.replace(/\.liquid$/, '');
+      result[name] = readFileSync(join(dirPath, file), 'utf-8');
+    }
   }
   return result;
 }

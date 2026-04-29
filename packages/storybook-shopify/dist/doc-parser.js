@@ -1,3 +1,4 @@
+import { FIXTURE_BY_LIQUID_TYPE } from './fixtures.js';
 const DOC_BLOCK_RE = /\{%-?\s*doc\s*-?%\}([\s\S]*?)\{%-?\s*enddoc\s*-?%\}/;
 // Matches: @param {type} name - description
 //      or: @param {type} [name] - description   (optional)
@@ -28,6 +29,22 @@ export function parseDocArgTypes(template) {
         };
     }
     return argTypes;
+}
+export function parseDocDefaults(template) {
+    const docMatch = template.match(DOC_BLOCK_RE);
+    if (!docMatch)
+        return {};
+    const defaults = {};
+    PARAM_RE.lastIndex = 0;
+    let match;
+    while ((match = PARAM_RE.exec(docMatch[1])) !== null) {
+        const [, liquidType, rawName] = match;
+        const name = rawName.replace(/^\[|\]$/g, '');
+        if (Object.prototype.hasOwnProperty.call(FIXTURE_BY_LIQUID_TYPE, liquidType)) {
+            defaults[name] = FIXTURE_BY_LIQUID_TYPE[liquidType];
+        }
+    }
+    return defaults;
 }
 function liquidTypeToControl(type) {
     switch (type) {

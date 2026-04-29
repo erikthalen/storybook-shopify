@@ -11,14 +11,14 @@ type FrameworkName = 'storybook-shopify';
 type BuilderName = '@storybook/builder-vite';
 export type FrameworkOptions = {
     builder?: BuilderOptions;
-    /** Parse {% doc %} blocks and generate argTypes automatically. */
+    /** Parse {% doc %} and {% schema %} blocks and generate argTypes automatically. Defaults to true. */
     renderDocTags?: boolean;
     /** Entry files (relative to src/) to load in the preview iframe from the built assets. */
     viteEntries?: string[];
     /**
-     * When true, auto-generates a basic story for every .liquid file found in
-     * sections/, snippets/, and blocks/ (files prefixed with _ are skipped).
-     * Generated stories are written to .storybook/.auto/ — add that folder to .gitignore.
+     * Auto-generates a basic story for every .liquid file found in sections/, snippets/, and blocks/
+     * (files prefixed with _ are skipped). Stories are written to .storybook/.auto/ on each startup.
+     * Set to false to disable. Defaults to true.
      */
     generateAutomaticStories?: boolean;
 };

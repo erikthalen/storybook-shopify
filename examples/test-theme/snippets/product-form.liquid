@@ -1,6 +1,8 @@
 {% doc %}
   Outputs a full product form including a variant picker, quantity selector, add-to-cart button,
   and Shopify payment button. Shows a striped loading animation on the button while the cart request is pending.
+
+  @param {product} product - Shopify `product` object.
 {% enddoc %}
 
 {% assign variant = product.selected_or_first_available_variant %}

@@ -2,6 +2,8 @@ import type { ArgsStoryFn, RenderContext } from 'storybook/internal/types';
 import { Liquid } from 'liquidjs';
 
 import type { ShopifyRenderer } from './types.js';
+import { globalContext } from './fixtures.js';
+import { parseSchemaDefaults } from './schema-parser.js';
 
 // Shopify-only block tags that must be stripped before LiquidJS parses a template.
 // Applied both to top-level templates and to snippets loaded via {% render %}.
@@ -22,7 +24,7 @@ const PAGINATE_BLOCK_RE =
 
 // Single-line Shopify-only tags that have no meaningful equivalent in preview
 const STRIP_SINGLE_TAGS_RE =
-  /\{%-?\s*(?:layout|sections?|content_for)\b[^%]*?-?%\}/g;
+  /\{%-?\s*(?:layout|sections?)\b[^%]*?-?%\}/g;
 
 // Snippets are registered at preview startup by entry-preview.ts via registerSnippets().
 // The map is mutated in place so the engine's FS closure always sees the current state.
@@ -39,6 +41,9 @@ const engine = new Liquid({
   trimTagLeft: false,
   trimTagRight: false,
   relativeReference: false, // snippets are looked up by name, not relative path
+  // Engine-level globals are visible in all scopes, including isolated {% render %} calls.
+  // Story args and section context are merged on top and always win.
+  globals: globalContext,
   // In-memory FS so LiquidJS's built-in {% render %} tag resolves snippets
   // from the snippets map rather than the real filesystem.
   // Scope isolation (render vs include semantics) is handled by LiquidJS.
@@ -99,6 +104,47 @@ engine.registerTag('form', {
     emitter.write(`<form${parts.length ? ' ' + parts.join(' ') : ''}>`);
     yield self.liquid.renderer.renderTemplates(self.templates, ctx, emitter);
     emitter.write('</form>');
+  },
+});
+
+// {% content_for 'block', type: 'block-type', id: 'block-id' %}
+// Renders the matching block template from the snippets map with a block context.
+// content_for 'blocks' (all blocks) renders nothing — not enough context at preview time.
+engine.registerTag('content_for', {
+  parse(token: { args?: string }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const self = this as any;
+    const attrs = parseFormHtmlAttrs(token.args ?? '');
+    self.typeRaw = attrs.find((a: { key: string }) => a.key === 'type')?.rawValue ?? null;
+    self.idRaw   = attrs.find((a: { key: string }) => a.key === 'id')?.rawValue   ?? '';
+  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  *render(ctx: any, emitter: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const self = this as any;
+    if (!self.typeRaw) return; // content_for 'blocks' — nothing to render
+
+    let blockType: string;
+    let blockId: string;
+    try {
+      blockType = String(self.liquid.evalValueSync(self.typeRaw, ctx));
+      blockId   = self.idRaw ? String(self.liquid.evalValueSync(self.idRaw, ctx)) : '';
+    } catch {
+      return;
+    }
+
+    const blockTemplate = snippets[blockType] ?? '';
+    if (!blockTemplate) return;
+
+    const blockSettings = parseSchemaDefaults(blockTemplate);
+    ctx.push({ block: { id: blockId, type: blockType, settings: blockSettings } });
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const tpls = (self.liquid as any).parse(stripShopifyOnlyBlocks(blockTemplate));
+      yield self.liquid.renderer.renderTemplates(tpls, ctx, emitter);
+    } finally {
+      ctx.pop();
+    }
   },
 });
 

@@ -1,4 +1,5 @@
 export { render, renderToCanvas, renderTemplate } from './render.js';
+export { fixtures } from './fixtures.js';
 export type {
   ShopifyRenderer,
   StoryContext,

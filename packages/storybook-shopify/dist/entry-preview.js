@@ -1,6 +1,6 @@
 import { shopifyOptions } from 'virtual:storybook-shopify-options';
 import { snippets } from 'virtual:storybook-shopify-snippets';
-import { parseDocArgTypes } from './doc-parser.js';
+import { parseDocArgTypes, parseDocDefaults } from './doc-parser.js';
 import { parseSchemaArgTypes, parseSchemaDefaults } from './schema-parser.js';
 import { registerSnippets, render, renderToCanvas } from './render.js';
 // Populate the engine's in-memory FS so {% render 'name' %} resolves correctly
@@ -54,22 +54,27 @@ export const argTypesEnhancers = shopifyOptions.renderDocTags
         makeArgTypesEnhancer(parseDocArgTypes),
     ]
     : [];
-// Populate args with schema default values so controls start with meaningful
-// data. Only fills keys not already set by the story's own args.
+// Populate args from schema/doc defaults so controls start with meaningful data.
+// Schema defaults cover section settings; doc defaults cover snippet @params.
+// Only fills keys not already set by the story's own args.
+function makeArgsEnhancer(parser) {
+    return (context) => {
+        const { component, initialArgs } = context;
+        if (typeof component !== 'string')
+            return {};
+        const defaults = parser(component);
+        const result = {};
+        for (const [key, value] of Object.entries(defaults)) {
+            if (!(key in initialArgs))
+                result[key] = value;
+        }
+        return result;
+    };
+}
 export const argsEnhancers = shopifyOptions.renderDocTags
     ? [
-        (context) => {
-            const { component, initialArgs } = context;
-            if (typeof component !== 'string')
-                return {};
-            const defaults = parseSchemaDefaults(component);
-            const result = {};
-            for (const [key, value] of Object.entries(defaults)) {
-                if (!(key in initialArgs))
-                    result[key] = value;
-            }
-            return result;
-        },
+        makeArgsEnhancer(parseSchemaDefaults),
+        makeArgsEnhancer(parseDocDefaults),
     ]
     : [];
 //# sourceMappingURL=entry-preview.js.map

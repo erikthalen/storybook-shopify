@@ -1,6 +1,7 @@
 import { createReadStream, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join, extname, relative } from 'node:path';
+import { parseSchemaDefaults } from './schema-parser.js';
 // core: wires together the Vite builder and our renderer preset
 export const core = {
     builder: import.meta.resolve('@storybook/builder-vite'),
@@ -13,7 +14,7 @@ export const stories = async (
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 existing = [], options) => {
     const frameworkOptions = await getFrameworkOptions(options);
-    if (!frameworkOptions.generateAutomaticStories)
+    if ((frameworkOptions.generateAutomaticStories ?? true) === false)
         return existing;
     const configDir = options.configDir;
     const root = join(configDir, '..');
@@ -36,7 +37,7 @@ existing = [], options) => {
             const storyFile = `${dir}--${file.replace(/\.liquid$/, '')}.stories.js`;
             const liquidRelPath = relative(autoDir, join(dirPath, file)).replace(/\\/g, '/');
             const content = readFileSync(join(dirPath, file), 'utf-8');
-            const defaults = extractSchemaDefaults(content);
+            const defaults = parseSchemaDefaults(content);
             writeFileSync(join(autoDir, storyFile), buildAutoStory(dir, file, liquidRelPath, defaults));
         }
     }
@@ -82,23 +83,6 @@ function collectStoryTitles(root, autoDir) {
     walk(root);
     return titles;
 }
-function extractSchemaDefaults(content) {
-    const m = content.match(/\{%-?\s*schema\s*-?%\}([\s\S]*?)\{%-?\s*endschema\s*-?%\}/);
-    if (!m)
-        return {};
-    try {
-        const schema = JSON.parse(m[1].trim());
-        const defaults = {};
-        for (const s of schema.settings ?? []) {
-            if (s.id && s.default !== undefined)
-                defaults[s.id] = s.default;
-        }
-        return defaults;
-    }
-    catch {
-        return {};
-    }
-}
 function buildAutoStory(dir, filename, liquidRelPath, defaults) {
     const title = buildAutoTitle(dir, filename);
     const context = DIR_CONTEXT[dir] ?? 'args';
@@ -127,7 +111,7 @@ async function getFrameworkOptions(options) {
 }
 export async function viteFinal(config, options) {
     const frameworkOptions = await getFrameworkOptions(options);
-    const renderDocTags = frameworkOptions.renderDocTags ?? false;
+    const renderDocTags = frameworkOptions.renderDocTags ?? true;
     const viteEntries = frameworkOptions.viteEntries ?? [];
     // configDir is the .storybook folder; the project root is one level up.
     const root = join(options.configDir, '..');
@@ -209,15 +193,17 @@ function shopifySnippetsPlugin(root) {
     };
 }
 function loadSnippets(root) {
-    const snippetsDir = join(root, 'snippets');
-    if (!existsSync(snippetsDir))
-        return {};
     const result = {};
-    for (const file of readdirSync(snippetsDir)) {
-        if (!file.endsWith('.liquid'))
+    for (const dir of ['snippets', 'blocks']) {
+        const dirPath = join(root, dir);
+        if (!existsSync(dirPath))
             continue;
-        const name = file.replace(/\.liquid$/, '');
-        result[name] = readFileSync(join(snippetsDir, file), 'utf-8');
+        for (const file of readdirSync(dirPath)) {
+            if (!file.endsWith('.liquid'))
+                continue;
+            const name = file.replace(/\.liquid$/, '');
+            result[name] = readFileSync(join(dirPath, file), 'utf-8');
+        }
     }
     return result;
 }

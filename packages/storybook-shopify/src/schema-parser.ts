@@ -1,5 +1,7 @@
 import type { InputType } from 'storybook/internal/types';
 
+import { FIXTURE_BY_SETTING_TYPE } from './fixtures.js';
+
 const SCHEMA_BLOCK_RE = /\{%-?\s*schema\s*-?%\}([\s\S]*?)\{%-?\s*endschema\s*-?%\}/;
 
 interface ShopifySetting {
@@ -35,8 +37,11 @@ export function parseSchemaDefaults(template: string): Record<string, unknown> {
   }
   const defaults: Record<string, unknown> = {};
   for (const setting of schema.settings ?? []) {
-    if (setting.id && setting.default !== undefined) {
+    if (!setting.id) continue;
+    if (setting.default !== undefined) {
       defaults[setting.id] = setting.default;
+    } else if (Object.prototype.hasOwnProperty.call(FIXTURE_BY_SETTING_TYPE, setting.type)) {
+      defaults[setting.id] = FIXTURE_BY_SETTING_TYPE[setting.type];
     }
   }
   return defaults;

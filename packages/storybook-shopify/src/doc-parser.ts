@@ -1,5 +1,7 @@
 import type { InputType } from 'storybook/internal/types';
 
+import { FIXTURE_BY_LIQUID_TYPE } from './fixtures.js';
+
 const DOC_BLOCK_RE = /\{%-?\s*doc\s*-?%\}([\s\S]*?)\{%-?\s*enddoc\s*-?%\}/;
 // Matches: @param {type} name - description
 //      or: @param {type} [name] - description   (optional)
@@ -35,6 +37,25 @@ export function parseDocArgTypes(template: string): Record<string, InputType> {
   }
 
   return argTypes;
+}
+
+export function parseDocDefaults(template: string): Record<string, unknown> {
+  const docMatch = template.match(DOC_BLOCK_RE);
+  if (!docMatch) return {};
+
+  const defaults: Record<string, unknown> = {};
+  PARAM_RE.lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = PARAM_RE.exec(docMatch[1])) !== null) {
+    const [, liquidType, rawName] = match;
+    const name = rawName.replace(/^\[|\]$/g, '');
+    if (Object.prototype.hasOwnProperty.call(FIXTURE_BY_LIQUID_TYPE, liquidType)) {
+      defaults[name] = FIXTURE_BY_LIQUID_TYPE[liquidType];
+    }
+  }
+
+  return defaults;
 }
 
 function liquidTypeToControl(type: string): string {
