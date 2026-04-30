@@ -1,0 +1,80 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: release
+      cancel-in-progress: false
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect version change
+        id: version
+        run: |
+          PREV=$(git show HEAD~1:packages/storybook-shopify/package.json 2>/dev/null | jq -r '.version // empty')
+          CURR=$(jq -r .version packages/storybook-shopify/package.json)
+          echo "curr=$CURR" >> $GITHUB_OUTPUT
+          if [ "$PREV" = "$CURR" ]; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: pnpm/action-setup@v4
+        if: steps.version.outputs.changed == 'true'
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        if: steps.version.outputs.changed == 'true'
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install & build
+        if: steps.version.outputs.changed == 'true'
+        run: |
+          pnpm install
+          pnpm --filter storybook-shopify build
+          [ -d packages/storybook-shopify/dist ] || { echo "Error: dist/ missing after build"; exit 1; }
+
+      - name: Deploy release branch & tag
+        if: steps.version.outputs.changed == 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.curr }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Stage the package contents in a temp directory
+          STAGING=$(mktemp -d)
+          cp packages/storybook-shopify/package.json "$STAGING/"
+          cp packages/storybook-shopify/tsconfig.json "$STAGING/"
+          cp -r packages/storybook-shopify/dist "$STAGING/"
+          cp -r packages/storybook-shopify/src "$STAGING/"
+
+          # Create an orphan staging branch, clear it, copy staged contents
+          git checkout --orphan _release_staging
+          git rm -rf . --quiet
+          cp -r "$STAGING/." .
+
+          git add .
+          git commit -m "release v$VERSION"
+
+          # Force-push to release branch (each release is a clean commit)
+          git push origin HEAD:refs/heads/release --force
+
+          # Create and push version tag
+          git tag -f "v$VERSION"
+          git push origin "v$VERSION" --force
