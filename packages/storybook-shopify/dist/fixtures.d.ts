@@ -408,6 +408,29 @@ export declare const video: {
 };
 export declare const FIXTURE_BY_SETTING_TYPE: Record<string, unknown>;
 export declare const FIXTURE_BY_LIQUID_TYPE: Record<string, unknown>;
+export declare const paginate: {
+    current_page: number;
+    current_offset: number;
+    items: number;
+    page_param: string;
+    page_size: number;
+    pages: number;
+    previous: {
+        is_link: boolean;
+        title: string;
+        url: string;
+    };
+    next: {
+        is_link: boolean;
+        title: string;
+        url: string;
+    };
+    parts: {
+        is_link: boolean;
+        title: string;
+        url: string;
+    }[];
+};
 export declare const shop: {
     name: string;
     currency: string;
@@ -915,6 +938,29 @@ export declare const fixtures: {
             template_suffix: string;
             collections: never[];
         };
+    };
+    paginate: {
+        current_page: number;
+        current_offset: number;
+        items: number;
+        page_param: string;
+        page_size: number;
+        pages: number;
+        previous: {
+            is_link: boolean;
+            title: string;
+            url: string;
+        };
+        next: {
+            is_link: boolean;
+            title: string;
+            url: string;
+        };
+        parts: {
+            is_link: boolean;
+            title: string;
+            url: string;
+        }[];
     };
 };
 //# sourceMappingURL=fixtures.d.ts.map

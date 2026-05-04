@@ -41,7 +41,6 @@
     "storybook": "^10.0.0"
   },
   "devDependencies": {
-    "@storybook/builder-vite": "^10.0.0",
     "@types/node": "^25.6.0",
     "storybook": "^10.0.0",
     "typescript": "^5.0.0",

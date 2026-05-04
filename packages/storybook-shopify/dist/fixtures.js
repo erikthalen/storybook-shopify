@@ -186,6 +186,31 @@ export const FIXTURE_BY_LIQUID_TYPE = {
     variant: product_variant,
     product_variant,
 };
+export const paginate = {
+    current_page: 2,
+    current_offset: 12,
+    items: 58,
+    page_param: "page",
+    page_size: 12,
+    pages: 5,
+    previous: {
+        is_link: true,
+        title: "1",
+        url: "/collections/example-collection?page=1",
+    },
+    next: {
+        is_link: true,
+        title: "3",
+        url: "/collections/example-collection?page=3",
+    },
+    parts: [
+        { is_link: true, title: "1", url: "/collections/example-collection?page=1" },
+        { is_link: false, title: "2", url: "/collections/example-collection?page=2" },
+        { is_link: true, title: "3", url: "/collections/example-collection?page=3" },
+        { is_link: true, title: "4", url: "/collections/example-collection?page=4" },
+        { is_link: true, title: "5", url: "/collections/example-collection?page=5" },
+    ],
+};
 // --- Shopify global object stubs ---
 export const shop = {
     name: "My Store",
@@ -250,6 +275,7 @@ export const globalContext = {
     settings,
     variant: product_variant,
     product_variant,
+    paginate,
 };
 // Public API — import these in stories to build custom fixtures via spread.
 export const fixtures = {
@@ -265,5 +291,6 @@ export const fixtures = {
     cart,
     request,
     product_variant,
+    paginate,
 };
 //# sourceMappingURL=fixtures.js.map
