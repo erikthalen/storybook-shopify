@@ -44,7 +44,12 @@ export declare const product: {
         option2: null;
         option3: null;
         weight: number;
-        featured_image: null;
+        featured_image: {
+            src: string;
+            width: number;
+            height: number;
+            alt: string;
+        };
         url: string;
     }[];
     options: string[];
@@ -63,7 +68,12 @@ export declare const product: {
         option2: null;
         option3: null;
         weight: number;
-        featured_image: null;
+        featured_image: {
+            src: string;
+            width: number;
+            height: number;
+            alt: string;
+        };
         url: string;
     };
     selected_variant: {
@@ -77,11 +87,153 @@ export declare const product: {
         option2: null;
         option3: null;
         weight: number;
-        featured_image: null;
+        featured_image: {
+            src: string;
+            width: number;
+            height: number;
+            alt: string;
+        };
         url: string;
     };
     template_suffix: string;
     collections: never[];
+};
+export declare const product_variant: {
+    id: number;
+    title: string;
+    price: number;
+    compare_at_price: number;
+    available: boolean;
+    sku: string;
+    barcode: string;
+    option1: string;
+    option2: string;
+    option3: null;
+    options: string[];
+    weight: number;
+    weight_unit: string;
+    taxable: boolean;
+    requires_shipping: boolean;
+    inventory_quantity: number;
+    inventory_management: string;
+    inventory_policy: string;
+    featured_image: {
+        src: string;
+        width: number;
+        height: number;
+        alt: string;
+    };
+    image: {
+        src: string;
+        width: number;
+        height: number;
+        alt: string;
+    };
+    url: string;
+    unit_price: null;
+    unit_price_measurement: null;
+    selected: boolean;
+    metafields: {};
+    product: {
+        id: number;
+        handle: string;
+        title: string;
+        description: string;
+        url: string;
+        price: number;
+        price_min: number;
+        price_max: number;
+        compare_at_price: number;
+        compare_at_price_min: number;
+        compare_at_price_max: number;
+        available: boolean;
+        type: string;
+        vendor: string;
+        tags: string[];
+        featured_image: {
+            src: string;
+            width: number;
+            height: number;
+            alt: string;
+        };
+        images: {
+            src: string;
+            width: number;
+            height: number;
+            alt: string;
+        }[];
+        media: {
+            src: string;
+            width: number;
+            height: number;
+            alt: string;
+            media_type: string;
+        }[];
+        variants: {
+            id: number;
+            title: string;
+            price: number;
+            compare_at_price: null;
+            available: boolean;
+            sku: string;
+            option1: string;
+            option2: null;
+            option3: null;
+            weight: number;
+            featured_image: {
+                src: string;
+                width: number;
+                height: number;
+                alt: string;
+            };
+            url: string;
+        }[];
+        options: string[];
+        options_with_values: {
+            name: string;
+            values: string[];
+        }[];
+        selected_or_first_available_variant: {
+            id: number;
+            title: string;
+            price: number;
+            compare_at_price: null;
+            available: boolean;
+            sku: string;
+            option1: string;
+            option2: null;
+            option3: null;
+            weight: number;
+            featured_image: {
+                src: string;
+                width: number;
+                height: number;
+                alt: string;
+            };
+            url: string;
+        };
+        selected_variant: {
+            id: number;
+            title: string;
+            price: number;
+            compare_at_price: null;
+            available: boolean;
+            sku: string;
+            option1: string;
+            option2: null;
+            option3: null;
+            weight: number;
+            featured_image: {
+                src: string;
+                width: number;
+                height: number;
+                alt: string;
+            };
+            url: string;
+        };
+        template_suffix: string;
+        collections: never[];
+    };
 };
 export declare const collection: {
     id: number;
@@ -143,7 +295,12 @@ export declare const collection: {
             option2: null;
             option3: null;
             weight: number;
-            featured_image: null;
+            featured_image: {
+                src: string;
+                width: number;
+                height: number;
+                alt: string;
+            };
             url: string;
         }[];
         options: string[];
@@ -162,7 +319,12 @@ export declare const collection: {
             option2: null;
             option3: null;
             weight: number;
-            featured_image: null;
+            featured_image: {
+                src: string;
+                width: number;
+                height: number;
+                alt: string;
+            };
             url: string;
         };
         selected_variant: {
@@ -176,7 +338,12 @@ export declare const collection: {
             option2: null;
             option3: null;
             weight: number;
-            featured_image: null;
+            featured_image: {
+                src: string;
+                width: number;
+                height: number;
+                alt: string;
+            };
             url: string;
         };
         template_suffix: string;
@@ -342,7 +509,12 @@ export declare const fixtures: {
             option2: null;
             option3: null;
             weight: number;
-            featured_image: null;
+            featured_image: {
+                src: string;
+                width: number;
+                height: number;
+                alt: string;
+            };
             url: string;
         }[];
         options: string[];
@@ -361,7 +533,12 @@ export declare const fixtures: {
             option2: null;
             option3: null;
             weight: number;
-            featured_image: null;
+            featured_image: {
+                src: string;
+                width: number;
+                height: number;
+                alt: string;
+            };
             url: string;
         };
         selected_variant: {
@@ -375,7 +552,12 @@ export declare const fixtures: {
             option2: null;
             option3: null;
             weight: number;
-            featured_image: null;
+            featured_image: {
+                src: string;
+                width: number;
+                height: number;
+                alt: string;
+            };
             url: string;
         };
         template_suffix: string;
@@ -441,7 +623,12 @@ export declare const fixtures: {
                 option2: null;
                 option3: null;
                 weight: number;
-                featured_image: null;
+                featured_image: {
+                    src: string;
+                    width: number;
+                    height: number;
+                    alt: string;
+                };
                 url: string;
             }[];
             options: string[];
@@ -460,7 +647,12 @@ export declare const fixtures: {
                 option2: null;
                 option3: null;
                 weight: number;
-                featured_image: null;
+                featured_image: {
+                    src: string;
+                    width: number;
+                    height: number;
+                    alt: string;
+                };
                 url: string;
             };
             selected_variant: {
@@ -474,7 +666,12 @@ export declare const fixtures: {
                 option2: null;
                 option3: null;
                 weight: number;
-                featured_image: null;
+                featured_image: {
+                    src: string;
+                    width: number;
+                    height: number;
+                    alt: string;
+                };
                 url: string;
             };
             template_suffix: string;
@@ -581,6 +778,143 @@ export declare const fixtures: {
         page_type: string;
         path: string;
         host: string;
+    };
+    product_variant: {
+        id: number;
+        title: string;
+        price: number;
+        compare_at_price: number;
+        available: boolean;
+        sku: string;
+        barcode: string;
+        option1: string;
+        option2: string;
+        option3: null;
+        options: string[];
+        weight: number;
+        weight_unit: string;
+        taxable: boolean;
+        requires_shipping: boolean;
+        inventory_quantity: number;
+        inventory_management: string;
+        inventory_policy: string;
+        featured_image: {
+            src: string;
+            width: number;
+            height: number;
+            alt: string;
+        };
+        image: {
+            src: string;
+            width: number;
+            height: number;
+            alt: string;
+        };
+        url: string;
+        unit_price: null;
+        unit_price_measurement: null;
+        selected: boolean;
+        metafields: {};
+        product: {
+            id: number;
+            handle: string;
+            title: string;
+            description: string;
+            url: string;
+            price: number;
+            price_min: number;
+            price_max: number;
+            compare_at_price: number;
+            compare_at_price_min: number;
+            compare_at_price_max: number;
+            available: boolean;
+            type: string;
+            vendor: string;
+            tags: string[];
+            featured_image: {
+                src: string;
+                width: number;
+                height: number;
+                alt: string;
+            };
+            images: {
+                src: string;
+                width: number;
+                height: number;
+                alt: string;
+            }[];
+            media: {
+                src: string;
+                width: number;
+                height: number;
+                alt: string;
+                media_type: string;
+            }[];
+            variants: {
+                id: number;
+                title: string;
+                price: number;
+                compare_at_price: null;
+                available: boolean;
+                sku: string;
+                option1: string;
+                option2: null;
+                option3: null;
+                weight: number;
+                featured_image: {
+                    src: string;
+                    width: number;
+                    height: number;
+                    alt: string;
+                };
+                url: string;
+            }[];
+            options: string[];
+            options_with_values: {
+                name: string;
+                values: string[];
+            }[];
+            selected_or_first_available_variant: {
+                id: number;
+                title: string;
+                price: number;
+                compare_at_price: null;
+                available: boolean;
+                sku: string;
+                option1: string;
+                option2: null;
+                option3: null;
+                weight: number;
+                featured_image: {
+                    src: string;
+                    width: number;
+                    height: number;
+                    alt: string;
+                };
+                url: string;
+            };
+            selected_variant: {
+                id: number;
+                title: string;
+                price: number;
+                compare_at_price: null;
+                available: boolean;
+                sku: string;
+                option1: string;
+                option2: null;
+                option3: null;
+                weight: number;
+                featured_image: {
+                    src: string;
+                    width: number;
+                    height: number;
+                    alt: string;
+                };
+                url: string;
+            };
+            template_suffix: string;
+            collections: never[];
+        };
     };
 };
 //# sourceMappingURL=fixtures.d.ts.map

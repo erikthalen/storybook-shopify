@@ -3,7 +3,7 @@ import { renderTemplate } from "storybook-shopify"
 import template from "../sections/welcome.liquid"
 
 export default {
-  title: "Sections/Welcome",
+  title: "Sections/Welcome Page",
 
   // Setting component lets the schema enhancer read {% schema %} and
   // generate argTypes automatically from the section's settings.
@@ -16,4 +16,4 @@ export default {
     }),
 }
 
-export const Default = {}
+export const WelcomePage = {}

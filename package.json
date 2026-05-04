@@ -5,6 +5,7 @@
   "scripts": {
     "build": "pnpm --filter './packages/**' build",
     "dev": "pnpm --filter './packages/**' dev",
+    "test": "pnpm --filter './packages/**' test",
     "storybook": "pnpm --filter './examples/**' storybook",
     "build-storybook": "pnpm --filter './examples/**' build-storybook"
   }

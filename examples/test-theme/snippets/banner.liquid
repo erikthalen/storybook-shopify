@@ -1,0 +1,32 @@
+{% doc %}
+  Full-width announcement banner. Renders blocks evenly distributed across the width.
+  Each block may optionally link to a URL.
+
+  @param {object} blocks - Section blocks, each with `text` and `url` settings.
+  @param {string} [class] - Additional CSS classes applied to the root element.
+
+  @example
+  {% render 'banner', blocks: section.blocks %}
+{% enddoc %}
+
+<div
+  class="grid h-9 w-full items-center bg-black px-4 py-2.5 text-xs text-white select-none {% if class %}{{ class }}{% endif %}"
+  style="grid-template-columns: repeat({{ blocks.size }}, 1fr)"
+>
+  {%- for block in blocks -%}
+    {%- if forloop.length > 1 and forloop.first -%}
+      {%- assign align = 'text-left' -%}
+    {%- elsif forloop.length > 1 and forloop.last -%}
+      {%- assign align = 'text-right' -%}
+    {%- else -%}
+      {%- assign align = 'text-center' -%}
+    {%- endif -%}
+    {%- if block.settings.url != blank -%}
+      <a href="{{ block.settings.url }}" class="{{ align }} hover:underline">
+        {{- block.settings.text | replace: ' • ', '&emsp;•&emsp;' -}}
+      </a>
+    {%- else -%}
+      <span class="{{ align }}">{{ block.settings.text | replace: ' • ', '&emsp;•&emsp;' }}</span>
+    {%- endif -%}
+  {%- endfor -%}
+</div>

@@ -26,7 +26,7 @@ const variant = {
   option2: null,
   option3: null,
   weight: 0,
-  featured_image: null,
+  featured_image: image,
   url: "/products/example-product?variant=1",
 };
 
@@ -41,7 +41,7 @@ const variant2 = {
   option2: null,
   option3: null,
   weight: 0,
-  featured_image: null,
+  featured_image: image2,
   url: "/products/example-product?variant=2",
 };
 
@@ -76,6 +76,35 @@ export const product = {
   selected_variant: variant,
   template_suffix: "",
   collections: [],
+};
+
+export const product_variant = {
+  id: 1,
+  title: "Navy / Large",
+  price: 2999,
+  compare_at_price: 3999,
+  available: true,
+  sku: "NAV-LRG-001",
+  barcode: "1234567890123",
+  option1: "Navy",
+  option2: "Large",
+  option3: null,
+  options: ["Navy", "Large"],
+  weight: 250,
+  weight_unit: "g",
+  taxable: true,
+  requires_shipping: true,
+  inventory_quantity: 12,
+  inventory_management: "shopify",
+  inventory_policy: "deny",
+  featured_image: image,
+  image: image,
+  url: "/products/example-product?variant=1",
+  unit_price: null,
+  unit_price_measurement: null,
+  selected: true,
+  metafields: {},
+  product: product,
 };
 
 export const collection = {
@@ -167,6 +196,8 @@ export const FIXTURE_BY_LIQUID_TYPE: Record<string, unknown> = {
   page,
   video,
   object: {},
+  variant: product_variant,
+  product_variant,
 };
 
 // --- Shopify global object stubs ---
@@ -238,6 +269,8 @@ export const globalContext: Record<string, unknown> = {
   request,
   customer,
   settings,
+  variant: product_variant,
+  product_variant,
 };
 
 // Public API — import these in stories to build custom fixtures via spread.
@@ -253,4 +286,5 @@ export const fixtures = {
   routes,
   cart,
   request,
+  product_variant,
 };

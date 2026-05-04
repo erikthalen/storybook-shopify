@@ -1,0 +1,23 @@
+[12:57:03.221] [INFO] storybook v10.3.5
+[12:57:03.573] [DEBUG] Getting package.json info for /Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/examples/basic/package.json...
+[12:57:03.700] [INFO] Starting...
+[12:57:03.803] [DEBUG] Starting preview..
+[12:57:03.808] [WARN] 🚨 Unable to index files:
+- ./.storybook/.auto/snippets--button.stories.js: Missing initializer in const declaration. (11:21)
+- ./.storybook/.auto/snippets--image.stories.js: Missing initializer in const declaration. (11:21)
+[12:57:03.810] [ERROR] Failed to build the preview
+[12:57:03.812] [ERROR] Error: [38;2;241;97;97mUnable to index files:
+- ./.storybook/.auto/snippets--button.stories.js: Missing initializer in const declaration. (11:21)
+- ./.storybook/.auto/snippets--image.stories.js: Missing initializer in const declaration. (11:21)[39m
+    at _StoryIndexGenerator.getIndexAndStats (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/storybook@10.3.5_@testing-library+dom@10.4.1_prettier@3.8.3_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/storybook/dist/core-server/index.js:6282:15)
+    at async _StoryIndexGenerator.getIndex (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/storybook@10.3.5_@testing-library+dom@10.4.1_prettier@3.8.3_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/storybook/dist/core-server/index.js:6271:13)
+    at async BasicMinimalPluginContext.config (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/@storybook+builder-vite@10.3.5_rollup@4.60.2_storybook@10.3.5_@testing-library+dom@10.4_176f04fac4500fcc45bb371a512cc0e7/node_modules/@storybook/builder-vite/dist/_node-chunks/chunk-FQ4EAKAD.js:184:19)
+    at async runConfigHook (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/vite@8.0.10_@types+node@25.6.0_jiti@2.6.1/node_modules/vite/dist/node/chunks/node.js:34798:15)
+    at async resolveConfig (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/vite@8.0.10_@types+node@25.6.0_jiti@2.6.1/node_modules/vite/dist/node/chunks/node.js:34248:11)
+    at async _createServer (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/vite@8.0.10_@types+node@25.6.0_jiti@2.6.1/node_modules/vite/dist/node/chunks/node.js:26029:65)
+    at async Module.start (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/@storybook+builder-vite@10.3.5_rollup@4.60.2_storybook@10.3.5_@testing-library+dom@10.4_176f04fac4500fcc45bb371a512cc0e7/node_modules/@storybook/builder-vite/dist/index.js:1557:17)
+    at async storybookDevServer (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/storybook@10.3.5_@testing-library+dom@10.4.1_prettier@3.8.3_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/storybook/dist/core-server/index.js:7503:83)
+    at async buildOrThrow (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/storybook@10.3.5_@testing-library+dom@10.4.1_prettier@3.8.3_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/storybook/dist/core-server/index.js:4508:12)
+    at async buildDevStandalone (file:///Users/erikthalen/Documents/GitHub/foobar/storybook-shopify/node_modules/.pnpm/storybook@10.3.5_@testing-library+dom@10.4.1_prettier@3.8.3_react-dom@19.2.5_react@19.2.5__react@19.2.5/node_modules/storybook/dist/core-server/index.js:8033:41)
+[12:57:03.814] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.

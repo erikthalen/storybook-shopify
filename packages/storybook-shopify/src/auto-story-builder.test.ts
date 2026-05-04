@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildAutoStory, buildAutoTitle } from './auto-story-builder.js';
+import { buildAutoStory, buildAutoTitle, shouldSkipLiquidFile } from './auto-story-builder.js';
 
 describe('buildAutoTitle', () => {
   it('capitalises the dir and title-cases the filename', () => {
@@ -126,5 +126,17 @@ describe('toExportName edge cases (via buildAutoStory)', () => {
     const presetsInfo = { hasBlocks: false, presets: [{ name: "Hero & Banner!" }] };
     const result = buildAutoStory('sections', 'test.liquid', '../../sections/test.liquid', {}, presetsInfo);
     expect(result).toContain('export const HeroBanner = {');
+  });
+});
+
+describe('shouldSkipLiquidFile', () => {
+  it('returns true for filenames starting with _', () => {
+    expect(shouldSkipLiquidFile('_meta-tags.liquid')).toBe(true);
+    expect(shouldSkipLiquidFile('_private.liquid')).toBe(true);
+  });
+
+  it('returns false for normal filenames', () => {
+    expect(shouldSkipLiquidFile('meta-tags.liquid')).toBe(false);
+    expect(shouldSkipLiquidFile('banner.liquid')).toBe(false);
   });
 });

@@ -7,7 +7,7 @@ import type { FrameworkOptions } from './types.js';
 import type { InlineConfig } from 'vite';
 
 import { parseSchemaDefaults, parsePresets } from './schema-parser.js';
-import { buildAutoStory, buildAutoTitle } from './auto-story-builder.js';
+import { buildAutoStory, buildAutoTitle, shouldSkipLiquidFile } from './auto-story-builder.js';
 
 // core: wires together the Vite builder and our renderer preset
 export const core: PresetProperty<'core'> = {
@@ -41,7 +41,7 @@ export const stories: PresetProperty<'stories'> = async (
     if (!existsSync(dirPath)) continue;
 
     for (const file of readdirSync(dirPath)) {
-      if (!file.endsWith('.liquid') || file.startsWith('_')) continue;
+      if (!file.endsWith('.liquid') || shouldSkipLiquidFile(file)) continue;
 
       const autoTitle = buildAutoTitle(dir, file);
       if (existingTitles.has(autoTitle)) continue;

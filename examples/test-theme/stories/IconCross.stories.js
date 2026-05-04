@@ -7,4 +7,4 @@ export default {
   // argTypes are generated from {% doc %} in IconCross.liquid via renderDocTags: true
 }
 
-export const Primary = {}
+export const IconCross = {}

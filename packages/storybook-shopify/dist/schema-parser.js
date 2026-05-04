@@ -135,4 +135,39 @@ function resolveControl(setting) {
             return { control: 'text', typeName: 'string' };
     }
 }
+export function parsePresets(template) {
+    const match = template.match(SCHEMA_BLOCK_RE);
+    if (!match)
+        return null;
+    let schema;
+    try {
+        schema = JSON.parse(match[1].trim());
+    }
+    catch {
+        return null;
+    }
+    if (!schema.presets?.length)
+        return null;
+    const hasBlocks = (schema.blocks?.length ?? 0) > 0;
+    const blockDefaults = {};
+    for (const blockDef of schema.blocks ?? []) {
+        const defs = {};
+        for (const setting of blockDef.settings ?? []) {
+            if (setting.default !== undefined)
+                defs[setting.id] = setting.default;
+        }
+        blockDefaults[blockDef.type] = defs;
+    }
+    const presets = schema.presets.map(preset => {
+        const resolved = { name: preset.name };
+        if (preset.blocks?.length) {
+            resolved.blocks = preset.blocks.map(b => ({
+                type: b.type,
+                settings: { ...blockDefaults[b.type], ...b.settings },
+            }));
+        }
+        return resolved;
+    });
+    return { presets, hasBlocks };
+}
 //# sourceMappingURL=schema-parser.js.map

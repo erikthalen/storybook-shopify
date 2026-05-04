@@ -1,52 +1,49 @@
-{% if section.settings.text != blank %}
-  <div
-    x-data="{ shown: false }"
-    x-init="$watch('shown', (value) => $dispatch('announcement-bar:visible', value))"
-    id="announcement_bar"
-    role="region"
-    aria-label="Announcement"
-    class="relative z-10 flex h-(--announcement-bar-height) items-center justify-center bg-(--jazz-neutral-100) px-4"
-    style="view-transition-name: announcement-bar"
-  >
-    {{ section.settings.text }}
-
-    <template x-teleport="body">
-      <div
-        x-intersect="shown = true"
-        x-intersect:leave="shown = false"
-        class="opacity pointer-events-none absolute top-0 right-0 left-0 h-(--announcement-bar-height)"
-      ></div>
-    </template>
-  </div>
+{% if section.blocks.size > 0 %}
+  <section id="announcement_bar" class="sticky -top-9 z-10 h-9" style="view-transition-name: announcement-bar">
+    {% render 'banner', blocks: section.blocks %}
+  </section>
 {% endif %}
 
 {% stylesheet %}
   body {
-    --announcement-bar-height: 0rem;
+    --announcement-bar-height: 0;
   }
 
   body:has(#announcement_bar) {
-    --announcement-bar-height: 2.5rem;
+    --announcement-bar-height: 2.25rem;
   }
 {% endstylesheet %}
 
 {% schema %}
 {
   "name": "Announcement bar",
+  "class": "contents",
   "enabled_on": {
     "groups": ["header"]
   },
-  "settings": [
+  "blocks": [
     {
-      "type": "text",
-      "id": "text",
-      "label": "Text",
-      "default": "Announcement"
+      "type": "item",
+      "name": "Banner item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Announcement"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Announcement bar"
+      "name": "Announcement bar",
+      "blocks": [{ "type": "item" }]
     }
   ]
 }
