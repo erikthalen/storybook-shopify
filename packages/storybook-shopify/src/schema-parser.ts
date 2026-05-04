@@ -174,3 +174,57 @@ function resolveControl(setting: ShopifySetting): {
       return { control: 'text', typeName: 'string' };
   }
 }
+
+export interface ResolvedPreset {
+  name: string;
+  blocks?: Array<{ type: string; settings: Record<string, unknown> }>;
+}
+
+export interface PresetsInfo {
+  presets: ResolvedPreset[];
+  hasBlocks: boolean;
+}
+
+export function parsePresets(template: string): PresetsInfo | null {
+  const match = template.match(SCHEMA_BLOCK_RE);
+  if (!match) return null;
+
+  let schema: {
+    presets?: Array<{
+      name: string;
+      blocks?: Array<{ type: string; settings?: Record<string, unknown> }>;
+    }>;
+    blocks?: Array<{ type: string; settings?: ShopifySetting[] }>;
+  };
+  try {
+    schema = JSON.parse(match[1].trim());
+  } catch {
+    return null;
+  }
+
+  if (!schema.presets?.length) return null;
+
+  const hasBlocks = (schema.blocks?.length ?? 0) > 0;
+
+  const blockDefaults: Record<string, Record<string, unknown>> = {};
+  for (const blockDef of schema.blocks ?? []) {
+    const defs: Record<string, unknown> = {};
+    for (const setting of blockDef.settings ?? []) {
+      if (setting.default !== undefined) defs[setting.id] = setting.default;
+    }
+    blockDefaults[blockDef.type] = defs;
+  }
+
+  const presets: ResolvedPreset[] = schema.presets.map(preset => {
+    const resolved: ResolvedPreset = { name: preset.name };
+    if (preset.blocks?.length) {
+      resolved.blocks = preset.blocks.map(b => ({
+        type: b.type,
+        settings: { ...blockDefaults[b.type], ...b.settings },
+      }));
+    }
+    return resolved;
+  });
+
+  return { presets, hasBlocks };
+}
