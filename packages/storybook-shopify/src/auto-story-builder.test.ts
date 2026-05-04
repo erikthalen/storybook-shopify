@@ -68,6 +68,20 @@ describe('buildAutoStory — with presets, no blocks', () => {
     expect(result).toContain('export const Foo = {');
     expect(result).toContain('export const BarBaz = {');
   });
+
+  it('escapes single quotes in preset name', () => {
+    const presetsInfo = { hasBlocks: false, presets: [{ name: "St. Patrick's Day" }] };
+    const result = buildAutoStory('sections', 'test.liquid', '../../sections/test.liquid', {}, presetsInfo);
+    expect(result).toContain("name: 'St. Patrick\\'s Day'");
+    expect(result).not.toContain("name: 'St. Patrick's Day'");
+  });
+
+  it('falls back to Default export when presets array is empty', () => {
+    const presetsInfo = { hasBlocks: false, presets: [] };
+    const result = buildAutoStory('sections', 'test.liquid', '../../sections/test.liquid', {}, presetsInfo);
+    expect(result).toContain('export const Default = {};');
+    expect(result).not.toContain('export const  = {');
+  });
 });
 
 describe('buildAutoStory — with presets and blocks', () => {
