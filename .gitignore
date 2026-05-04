@@ -1,4 +1,6 @@
 node_modules
 .DS_Store
+docs/.vitepress/dist
+docs/.vitepress/cache
 # Auto-generated stories from storybook-shopify's generateAutomaticStories option
 **/.storybook/.auto/
