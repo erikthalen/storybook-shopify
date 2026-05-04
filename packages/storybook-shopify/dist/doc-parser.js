@@ -40,7 +40,10 @@ export function parseDocDefaults(template) {
     while ((match = PARAM_RE.exec(docMatch[1])) !== null) {
         const [, liquidType, rawName] = match;
         const name = rawName.replace(/^\[|\]$/g, '');
-        if (Object.prototype.hasOwnProperty.call(FIXTURE_BY_LIQUID_TYPE, liquidType)) {
+        if (liquidType === 'string') {
+            defaults[name] = name.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        }
+        else if (Object.prototype.hasOwnProperty.call(FIXTURE_BY_LIQUID_TYPE, liquidType)) {
             defaults[name] = FIXTURE_BY_LIQUID_TYPE[liquidType];
         }
     }

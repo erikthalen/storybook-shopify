@@ -1,0 +1,35 @@
+{% doc %}
+  Single tab item for use within a Tabs component.
+
+  @param {string} text - Tab label.
+  @param {string} href - Tab URL.
+  @param {boolean} [active] - Marks the tab as active (overrides path check).
+  @param {string} [class] - Additional CSS classes.
+
+  @example
+  {% render 'tab-item', text: 'Road', href: '/collections/road' %}
+  {% render 'tab-item', text: 'Road', href: '/collections/road', active: true %}
+{% enddoc %}
+
+<a
+  href="{{ href }}"
+  class="tab-item font-display text-4xl italic leading-none {{ class }}"
+  {% if active or request.path == href %}aria-current="page"{% endif %}
+>
+  {{- text -}}
+</a>
+
+{% stylesheet %}
+  .tab-item {
+    color: var(--color-black-300);
+    transition: color 150ms;
+  }
+
+  .tab-item:hover {
+    color: var(--color-black-500);
+  }
+
+  .tab-item[aria-current] {
+    color: var(--color-black);
+  }
+{% endstylesheet %}
