@@ -277,7 +277,9 @@ export function renderTemplate(
   template: string,
   context: Record<string, unknown>
 ): string {
-  return engine.parseAndRenderSync(stripShopifyOnlyBlocks(template), context);
+  return engine.parseAndRenderSync(stripShopifyOnlyBlocks(template), context, {
+    globals: { ...globalContext, ...context },
+  });
 }
 
 export const render: ArgsStoryFn<ShopifyRenderer> = (args, context) => {

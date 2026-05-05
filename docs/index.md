@@ -10,9 +10,16 @@
 
 Install `storybook` and `storybook-shopify` as dev dependencies in your theme project:
 
-```bash
-pnpm add -D storybook storybook-shopify
+```json
+{
+  "devDependencies": {
+    "storybook": "^10.0.0",
+    "storybook-shopify": "github:erikthalen/storybook-shopify#v0.1.0-beta.5"
+  }
+}
 ```
+
+`storybook-shopify` is currently only released through GitHub, hence the special version string.
 
 ## Configuration
 
