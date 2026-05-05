@@ -1,0 +1,1 @@
+{"version":3,"file":"renderer-preset.js","sourceRoot":"","sources":["../src/renderer-preset.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,UAAU,CAAC;AAIzC,gFAAgF;AAChF,MAAM,CAAC,MAAM,kBAAkB,GAAyC,KAAK,EAAE,KAAK,GAAG,EAAE,EAAE,EAAE;IAC3F,OAAO;QACL,GAAI,KAAkB;QACtB,aAAa,CAAC,MAAM,CAAC,IAAI,CAAC,OAAO,CAAC,oBAAoB,CAAC,CAAC;KACzD,CAAC;AACJ,CAAC,CAAC"}
